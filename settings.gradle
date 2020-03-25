@@ -1,0 +1,4 @@
+rootProject.name = 'cmpt213_a4_2'
+include 'public'
+findProject(':public')?.name = '/public'
+
