@@ -4,12 +4,14 @@ import java.util.ArrayList;
 
 import static ca.game.model.InputTokens.makeInputTokensObject;
 import static ca.game.model.Maze.*;
+import static ca.game.model.Mouse.makeMouseObject;
 
 /**
  * Handles game play, and initializes the maze.
  */
 public class GamePlay {
     private static char[][] maze = new char[ROW][COLUMN];
+
 
     private GamePlay() { }
 
@@ -61,4 +63,5 @@ public class GamePlay {
         }
         return false;
     }
+    
 }

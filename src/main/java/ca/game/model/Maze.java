@@ -219,6 +219,13 @@ public class Maze {
     }
 
     private boolean doesCellEqualTo(Cell cell, char typeOfWall){
+        if (cell.getRow() < 0) {
+            System.out.println("cell.getRow() is = " + cell.getRow());
+        }
+        if (cell.getColumn() < 0) {
+            System.out.println("cell.getColumn() is = " + cell.getColumn());
+        }
+
         return maze[cell.getRow()][cell.getColumn()] == typeOfWall;
     }
 

@@ -1,7 +1,6 @@
 package ca.game.wrappers;
 
-import ca.game.controllers.GameController;
-import ca.game.model.PlayGame;
+import ca.game.model.Game;
 
 public class ApiGameWrapper {
     public int gameNumber;
@@ -10,19 +9,13 @@ public class ApiGameWrapper {
     public int numCheeseFound;
     public int numCheeseGoal;
     // MAY NEED TO CHANGE PARAMETERS HERE TO SUITE YOUR PROJECT
-
-    public static ApiGameWrapper makeFromGame(PlayGame game, int id) {
+    public static ApiGameWrapper makeFromGame(Game game, int id) {
         ApiGameWrapper wrapper = new ApiGameWrapper();
         wrapper.gameNumber = id;
         wrapper.numCheeseFound = game.getCurrentCheese();
         wrapper.numCheeseGoal = game.getTotalCheese();
-//        GameController.Status gameStatus = game.getGameStatus();
-//        updateGameStatus(wrapper, gameStatus);
+        wrapper.isGameWon = game.didPlayerWon();
+        wrapper.isGameLost = game.didPlayerLost();
         return wrapper;
     }
-
-    public void setGameNumber(int gameNumber) {
-        this.gameNumber = gameNumber;
-    }
-
 }
