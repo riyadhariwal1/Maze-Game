@@ -11,8 +11,8 @@ import static ca.game.model.Mouse.makeMouseObject;
  * Prints the game to the screen.
  */
 public class Game {
-    private int currentCheese = 0;
-    private int totalCheese = 5;
+    public int currentCheese = 0;
+    public int totalCheese = 5;
     private final char DEAD = 'X';
     private char[][] mazeLost;
     public static char[][] maze;
@@ -87,6 +87,17 @@ public class Game {
         return playerIsNotDead;
     }
 
+    public boolean[][] makeMazeVisible() {
+        boolean[][] isVisible = new boolean[ROW][COLUMN];
+        for (int i = 0; i < ROW; i++) {
+            for (int j = 0; j < COLUMN; j++) {
+                isVisible[i][j] = true;
+                hiddenMaze[i][j] = EXPLORED_SPACES;
+            }
+        }
+        return isVisible;
+    }
+
     public boolean[][] getIsVisibleMaze() {
         boolean[][] isVisible = new boolean[ROW][COLUMN];
         for (int i = 0; i < ROW; i++) {
@@ -142,8 +153,6 @@ public class Game {
                 Scanner userInput = new Scanner(System.in);
                 char choice = userInput.next().charAt(0);
 
-                System.out.println();
-
                 // Handles user input
                 switch (choice) {
                     case 'w':
@@ -182,7 +191,7 @@ public class Game {
                         totalCheese = 1;
                         break;
                     default:
-                        System.out.println("Invalid move. Please enter just A (left), S (down), D (right), or W (up).");
+//                        System.out.println("Invalid move. Please enter just A (left), S (down), D (right), or W (up).");
                 }
             }
 
@@ -213,7 +222,7 @@ public class Game {
         if (!gamePlay.didCatGetCheese(catPositions, cheesePosition) && !gamePlay.didMouseGetCheese(cheesePosition, mousePosition)) {
             maze[cheesePosition.getRow()][cheesePosition.getColumn()] = CHEESE;
         } else if (gamePlay.didMouseGetCheese(cheesePosition, mousePosition)) {
-            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+//            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
             playerWon = true;
             currentCheese++;
         }
@@ -228,7 +237,7 @@ public class Game {
         // Checks if mouse move is valid
         if (mouse.isValidMove(mPosition, maze)) {
 
-            System.out.println("moved mouse");
+//            System.out.println("moved mouse");
             // If yes, update the maze
             inputTokens.updateMouseAndMaze(mPosition, maze);
             mousePosition = mouse.findMousePosition(maze);
@@ -261,7 +270,7 @@ public class Game {
 //                hiddenMazeDisplay(hiddenMaze, maze);
             }
         } else {
-            System.out.println("Invalid move: you cannot move through walls!");
+//            System.out.println("Invalid move: you cannot move through walls!");
         }
         return playerIsNotDead;
     }

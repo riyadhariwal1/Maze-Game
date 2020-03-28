@@ -83,7 +83,6 @@ public class GameController {
                 return apiBoardWrapper;
             }
         }
-
         throw new IllegalArgumentException();
     }
 
@@ -117,53 +116,20 @@ public class GameController {
 
                 switch(move) {
                     case "MOVE_DOWN":
-                        returnBoard(mousePosition.getDown(mousePosition), game, gameWrapper, apiGameWrapperId, apiBoardWrapper);
+                        System.out.println(move);
+                        return returnBoard(mousePosition.getDown(mousePosition), game, gameWrapper, apiGameWrapperId, apiBoardWrapper);
 
                     case "MOVE_UP":
                         System.out.println(move);
-                        boolean playerIsNotDead = game.isPlayerIsNotDead(true, gamePlay, maze,
-                                catPositions, mousePosition.getUp(mousePosition), hiddenMaze, cheesePosition);
-                        game.setCheese(maze, cheesePosition, catPositions, mouse.findMousePosition(maze));
-
-                        gameWrapper.numCheeseFound = game.getCurrentCheese();
-                        gameWrapper.isGameWon = game.didPlayerWon();
-                        gameWrapper.isGameLost = didPlayerLost();
-                        apiGameWrappers.set(apiGameWrapperId, gameWrapper);
-
-                        apiBoardWrapper = ApiBoardWrapper.makeFromGame(game);
-                        apiBoardWrappers.set(apiGameWrapperId, apiBoardWrapper);
-                        return apiBoardWrapper;
+                        return returnBoard(mousePosition.getUp(mousePosition), game, gameWrapper, apiGameWrapperId, apiBoardWrapper);
 
                     case "MOVE_LEFT":
                         System.out.println(move);
-                        playerIsNotDead = game.isPlayerIsNotDead(true, gamePlay, maze,
-                                catPositions, mousePosition.getLeft(mousePosition), hiddenMaze, cheesePosition);
-                        game.setCheese(maze, cheesePosition, catPositions, mouse.findMousePosition(maze));
-
-                        gameWrapper.numCheeseFound = game.getCurrentCheese();
-                        gameWrapper.isGameWon = game.didPlayerWon();
-                        System.out.println();
-                        gameWrapper.isGameLost = didPlayerLost();
-                        apiGameWrappers.set(apiGameWrapperId, gameWrapper);
-
-                        apiBoardWrapper = ApiBoardWrapper.makeFromGame(game);
-                        apiBoardWrappers.set(apiGameWrapperId, apiBoardWrapper);
-                        return apiBoardWrapper;
+                        return returnBoard(mousePosition.getLeft(mousePosition), game, gameWrapper, apiGameWrapperId, apiBoardWrapper);
 
                     case "MOVE_RIGHT":
                         System.out.println(move);
-                        playerIsNotDead = game.isPlayerIsNotDead(true, gamePlay, maze,
-                                catPositions, mousePosition.getRight(mousePosition), hiddenMaze, cheesePosition);
-                        game.setCheese(maze, cheesePosition, catPositions, mouse.findMousePosition(maze));
-
-                        gameWrapper.numCheeseFound = game.getCurrentCheese();
-                        gameWrapper.isGameWon = game.didPlayerWon();
-                        gameWrapper.isGameLost = didPlayerLost();
-                        apiGameWrappers.set(apiGameWrapperId, gameWrapper);
-
-                        apiBoardWrapper = ApiBoardWrapper.makeFromGame(game);
-                        apiBoardWrappers.set(apiGameWrapperId, apiBoardWrapper);
-                        return apiBoardWrapper;
+                        return returnBoard(mousePosition.getRight(mousePosition), game, gameWrapper, apiGameWrapperId, apiBoardWrapper);
 
                     case "MOVE_CATS":
                         gameWrapper.numCheeseFound = game.getCurrentCheese();
@@ -176,6 +142,36 @@ public class GameController {
                         return apiBoardWrapper;
 
                     default:
+                        throw new IllegalAccessError();
+                }
+            }
+        }
+        throw new IllegalArgumentException();
+    }
+
+    @PostMapping("/api/games/{gameNumber}/cheatstate")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ApiGameWrapper activateCheats(@PathVariable("gameNumber") int apiGameWrapperId, @RequestBody String cheat) {
+        for (ApiGameWrapper gameWrapper : apiGameWrappers) {
+            if (gameWrapper.gameNumber == apiGameWrapperId) {
+                Game game = playGames.get(apiGameWrapperId);
+
+                switch (cheat) {
+                    case "1_CHEESE":
+                        game.totalCheese = 1;
+                        gameWrapper.numCheeseGoal = 1;
+                        apiGameWrappers.set(apiGameWrapperId, gameWrapper);
+                        System.out.println("1_CHEESE");
+                        return gameWrapper;
+
+                    case "SHOW_ALL":
+                        ApiBoardWrapper apiBoardWrapper = apiBoardWrappers.get(apiGameWrapperId);
+                        apiBoardWrapper.isVisible = game.makeMazeVisible();
+                        apiBoardWrappers.set(apiGameWrapperId, apiBoardWrapper);
+                        System.out.println("SHOW_ALL");
+                        return gameWrapper;
+                    default:
+                        System.out.println("Default");
                         throw new IllegalAccessError();
                 }
             }
