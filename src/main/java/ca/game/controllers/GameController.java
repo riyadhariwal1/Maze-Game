@@ -161,17 +161,17 @@ public class GameController {
                         game.totalCheese = 1;
                         gameWrapper.numCheeseGoal = 1;
                         apiGameWrappers.set(apiGameWrapperId, gameWrapper);
-                        System.out.println("1_CHEESE");
+//                        System.out.println("1_CHEESE");
                         return gameWrapper;
 
                     case "SHOW_ALL":
                         ApiBoardWrapper apiBoardWrapper = apiBoardWrappers.get(apiGameWrapperId);
                         apiBoardWrapper.isVisible = game.makeMazeVisible();
                         apiBoardWrappers.set(apiGameWrapperId, apiBoardWrapper);
-                        System.out.println("SHOW_ALL");
+//                        System.out.println("SHOW_ALL");
                         return gameWrapper;
                     default:
-                        System.out.println("Default");
+//                        System.out.println("Default");
                         throw new IllegalAccessError();
                 }
             }

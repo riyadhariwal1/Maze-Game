@@ -197,7 +197,7 @@ public class Game {
 
             // When player finds cheese
             if (playerIsNotDead) {
-                currentCheese++;
+//                currentCheese++;
 //                System.out.println("Congratulations! You won!");
 //                cheeseCounterDisplay();
 //                System.out.println();
