@@ -21,7 +21,6 @@ public class Mouse {
         return maze[cell.getRow()][cell.getColumn()] == typeOfWall;
     }
 
-    // Finds all possible moves of the mouse
     private void findEmptySpaces(Cell mouseCoord, char[][] maze) {
         emptySpaces.clear();
 

@@ -16,7 +16,6 @@ public class ApiBoardWrapper {
     public static final int ROW = 15;
     public static final int COLUMN = 20;
 
-    // MAY NEED TO CHANGE PARAMETERS HERE TO SUITE YOUR PROJECT
     public static ApiBoardWrapper makeFromGame(Game game) {
         ApiBoardWrapper wrapper = new ApiBoardWrapper();
         wrapper.boardWidth = COLUMN;
@@ -26,9 +25,7 @@ public class ApiBoardWrapper {
         wrapper.catLocations = ApiLocationWrapper.makeFromCellLocations(game.getCatPositions());
         wrapper.hasWalls = game.getHasWallsMaze();
         wrapper.isVisible = game.getIsVisibleMaze();
-        // Populate this object!
 
         return wrapper;
     }
-
 }

@@ -55,22 +55,9 @@ public class Game {
 
         mousePosition = mouse.findMousePosition(maze);
         mazeRevealer.updateHiddenMaze(mousePosition, maze, hiddenMaze);
-//            hiddenMazeDisplay(hiddenMaze, maze);
 
         cheesePosition = inputTokens.getCheesePosition(maze);
         catPositions = cat.getCatPositions(maze);
-
-            System.out.println("Maze 1:");
-            for (int i = 0; i < ROW; i++) {
-                for (int j = 0; j < COLUMN; j++) {
-                    if (maze[i][j] == PERIMETER_WALL) {
-                        System.out.print(WALL);
-                    } else {
-                        System.out.print(maze[i][j]);
-                    }
-                }
-                System.out.println();
-            }
 
         return new Game();
     }
@@ -126,8 +113,6 @@ public class Game {
 
     private void playGame() {
 
-//        initialMenu();
-        // While player has not gotten all the cheeses and isn't dead:
         while(currentCheese != totalCheese && playerIsNotDead) {
             gamePlay = GamePlay.makeGamePlayObject();
             gamePlay.setInitialMaze();
@@ -140,20 +125,14 @@ public class Game {
 
             mousePosition = mouse.findMousePosition(maze);
             mazeRevealer.updateHiddenMaze(mousePosition, maze, hiddenMaze);
-//            hiddenMazeDisplay(hiddenMaze, maze);
 
-            // While the mouse didn't get the cheese and the player isn't dead:
             while(playerIsNotDead && !gamePlay.didMouseGetCheese(cheesePosition, mouse.findMousePosition(maze))) {
                 catPositions = cat.getCatPositions(maze);
                 mousePosition = mouse.findMousePosition(maze);
 
-//                cheeseCounterDisplay();
-//                enterMoveDisplay();
-
                 Scanner userInput = new Scanner(System.in);
                 char choice = userInput.next().charAt(0);
 
-                // Handles user input
                 switch (choice) {
                     case 'w':
                     case 'W':
@@ -191,29 +170,16 @@ public class Game {
                         totalCheese = 1;
                         break;
                     default:
-//                        System.out.println("Invalid move. Please enter just A (left), S (down), D (right), or W (up).");
+                        break;
                 }
             }
 
-            // When player finds cheese
             if (playerIsNotDead) {
-//                currentCheese++;
-//                System.out.println("Congratulations! You won!");
-//                cheeseCounterDisplay();
-//                System.out.println();
-//                revealedMazeDisplay(maze);
             }
         }
 
-        // When player dies
         if (!playerIsNotDead) {
             playerLost = true;
-//            cheeseCounterDisplay();
-//            System.out.println("I'm sorry, you have been eaten!");
-//            System.out.println();
-//            revealedMazeDisplay(mazeLost);
-//            cheeseCounterDisplay();
-//            System.out.println("GAME OVER; please try again.");
         }
     }
 
@@ -222,10 +188,58 @@ public class Game {
         if (!gamePlay.didCatGetCheese(catPositions, cheesePosition) && !gamePlay.didMouseGetCheese(cheesePosition, mousePosition)) {
             maze[cheesePosition.getRow()][cheesePosition.getColumn()] = CHEESE;
         } else if (gamePlay.didMouseGetCheese(cheesePosition, mousePosition)) {
-//            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
             playerWon = true;
-            currentCheese++;
+            if (currentCheese != totalCheese) {
+                currentCheese++;
+            }
         }
+    }
+
+
+    public boolean moveMouse(boolean playerIsNotDead, GamePlay gamePlay, char[][] maze,
+                                     ArrayList<Cell> catPositions, Cell mPosition, char[][] hiddenMaze,
+                                     Cell cheesePosition) {
+        MazeRevealer mazeRevealer = MazeRevealer.makeMazeRevealerObject();
+        Mouse mouse = makeMouseObject();
+
+        if (mouse.isValidMove(mPosition, maze)) {
+
+            inputTokens.updateMouseAndMaze(mPosition, maze);
+            mousePosition = mouse.findMousePosition(maze);
+
+            Cell currentMousePosition = mouse.findMousePosition(maze);
+
+            if (gamePlay.didCatGetMouse(catPositions, currentMousePosition)) {
+                maze[mPosition.getRow()][mPosition.getColumn()] = DEAD;
+                mazeLost = getMaze();
+                mazeRevealer.updateHiddenMaze(currentMousePosition, maze, hiddenMaze);
+                setCheese(maze, cheesePosition, catPositions, currentMousePosition);
+
+                playerIsNotDead = false;
+                playerLost = true;
+
+            }
+        }
+        return playerIsNotDead;
+    }
+
+    public boolean moveCats(boolean playerIsNotDead, GamePlay gamePlay, char[][] maze,
+                                     ArrayList<Cell> catPositions, Cell mPosition, char[][] hiddenMaze,
+                                     Cell cheesePosition) {
+        MazeRevealer mazeRevealer = MazeRevealer.makeMazeRevealerObject();
+
+        inputTokens.updateCatsAndMaze(maze);
+        if (gamePlay.didCatGetMouse(cat.getCatPositions(maze), mPosition)) {
+            maze[mPosition.getRow()][mPosition.getColumn()] = DEAD;
+            mazeLost = getMaze();
+
+            playerIsNotDead = false;
+            playerLost = true;
+        }
+
+        mazeRevealer.updateHiddenMaze(mPosition, maze, hiddenMaze);
+        setCheese(maze, cheesePosition, catPositions, mPosition);
+        return playerIsNotDead;
     }
 
     public boolean isPlayerIsNotDead(boolean playerIsNotDead, GamePlay gamePlay, char[][] maze,
@@ -234,23 +248,18 @@ public class Game {
         MazeRevealer mazeRevealer = MazeRevealer.makeMazeRevealerObject();
         Mouse mouse = makeMouseObject();
 
-        // Checks if mouse move is valid
         if (mouse.isValidMove(mPosition, maze)) {
 
-//            System.out.println("moved mouse");
-            // If yes, update the maze
             inputTokens.updateMouseAndMaze(mPosition, maze);
             mousePosition = mouse.findMousePosition(maze);
 
             Cell currentMousePosition = mouse.findMousePosition(maze);
 
-            // If the mouse is eaten by the cat, display message
             if (gamePlay.didCatGetMouse(catPositions, currentMousePosition)) {
                 maze[mPosition.getRow()][mPosition.getColumn()] = DEAD;
                 mazeLost = getMaze();
                 mazeRevealer.updateHiddenMaze(currentMousePosition, maze, hiddenMaze);
                 setCheese(maze, cheesePosition, catPositions, currentMousePosition);
-//                hiddenMazeDisplay(hiddenMaze, maze);
 
                 playerIsNotDead = false;
                 playerLost = true;
@@ -267,10 +276,7 @@ public class Game {
 
                 mazeRevealer.updateHiddenMaze(currentMousePosition, maze, hiddenMaze);
                 setCheese(maze, cheesePosition, catPositions, currentMousePosition);
-//                hiddenMazeDisplay(hiddenMaze, maze);
             }
-        } else {
-//            System.out.println("Invalid move: you cannot move through walls!");
         }
         return playerIsNotDead;
     }
@@ -286,6 +292,4 @@ public class Game {
     public ArrayList<Cell> getCatPositions() {
         return catPositions;
     }
-
-
 }
